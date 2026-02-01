@@ -1,4 +1,4 @@
-import {Body, Controller, Post, UsePipes, ValidationPipe} from '@nestjs/common';
+import {Body, Controller, Post} from '@nestjs/common';
 import {PaymentRequest} from './payment.request';
 import {CalculatePaymentUseCase} from '../../../application/ports/in/calculate_payment/calculate.payment.usecase';
 import {PaymentResponse} from './payment.response';
@@ -11,8 +11,8 @@ export class CalculatePaymentController {
     ){}
 
     @Post()
-    @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-    async calculatePayment(@Body() payment: PaymentRequest): Promise<PaymentResponse[]>{
+    async calculatePayment(@Body() payment: PaymentRequest): Promise<PaymentResponse[]> {
+        console.log("CalculatePaymentController - calculatePayment called with:", payment);
         return this.calculatePaymentUseCase.calculatePayment(payment);
     }
 }

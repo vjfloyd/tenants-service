@@ -1,6 +1,6 @@
-// src/adapters/in/create_tenant/create-tenant.mapper.ts
 import {CreateTenantDto} from './create.tenant.dto';
 import {Tenant} from 'src/application/service/create_tenant/Tenant';
+import {v4 as uuidv4} from 'uuid';
 
 
 export function mapCreateTenantDtoToTenant(dto: CreateTenantDto): Tenant {
@@ -9,6 +9,6 @@ export function mapCreateTenantDtoToTenant(dto: CreateTenantDto): Tenant {
     dto.floor,
     dto.month,
     dto.year,
-      '' // Provide a default if code is missing
+     uuidv4()
   );
 }

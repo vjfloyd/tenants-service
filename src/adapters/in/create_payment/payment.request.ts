@@ -10,6 +10,7 @@ export class PaymentRequest {
     @IsNumber()
     year: number;
     @IsNumber()
+    @IsOptional()
     totalConsumption: number;
     @IsNumber()
     totalAmount: number;
@@ -26,11 +27,14 @@ export class PaymentRequest {
     tenantCode: string;
 
     @IsString()
-    tenantName: string;
+    name: string;
 
     @IsNumber()
     floor: number;
 
     @IsNumber()
     consumption: number;
+
+    @IsNumber()
+    debt: number;
 }

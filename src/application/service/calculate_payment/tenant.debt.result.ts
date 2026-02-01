@@ -3,7 +3,7 @@ export class TenantDebtResult {
     isTenant?: boolean;
     floor: number;
     firstFloor? : number;
-    tenantName?: string;
+    name?: string;
     month?: number;
     debt: number;
 }

@@ -15,7 +15,7 @@ export class CreatePaymentRepository {
         // Implement the logic to save the payment to the database
         await this.paymentModel.create(payment);
         console.log('Payment saved:');
-
     }
+
 
 }

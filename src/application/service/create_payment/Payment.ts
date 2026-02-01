@@ -3,7 +3,7 @@ export class Payment {
   paymentId?: string | null;
   month: number;
   year: number;
-  totalConsumption: number;
+  totalConsumption: number | undefined;
   totalAmount: number;
   engineConsumption: number;
   tenants: TenantConsumption[];
@@ -11,7 +11,8 @@ export class Payment {
 
 class TenantConsumption {
     tenantCode: string;
-    tenantName: string;
+    name: string;
     floor: number;
     consumption: number;
+    debt: number;
 }

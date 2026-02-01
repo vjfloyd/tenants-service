@@ -8,14 +8,17 @@ export type PaymentDocument = Payments & Document;
     @Prop({ required: true })
     tenantCode: string;
 
-    @Prop({ required: true })
-    tenantName: string;
+    @Prop({ required: false })
+    name: string;
 
     @Prop({ required: true })
     floor: number;
 
     @Prop({ required: true })
     consumption: number;
+
+    @Prop({ required: false })
+    debt: number;
   }
 
   export const TenantConsumptionSchema = SchemaFactory.createForClass(TenantConsumption);
@@ -31,7 +34,7 @@ export type PaymentDocument = Payments & Document;
     @Prop({ required: true, min: 2020 })
     year: number;
 
-    @Prop({ required: true, min: 0 })
+    @Prop({ required: false, min: 0 })
     totalConsumption: number;
 
     @Prop({ required: true, min: 0 })

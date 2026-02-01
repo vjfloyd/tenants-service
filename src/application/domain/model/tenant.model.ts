@@ -1,7 +1,7 @@
 export interface Tenant {
   name: string;
-  code: string;
   floor: number;
-  month: number;
-  year: number;
+  // month: number;
+  // year: number;
+  code: string;
 }

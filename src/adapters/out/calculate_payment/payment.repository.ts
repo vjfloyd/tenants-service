@@ -11,8 +11,10 @@ export class PaymentRepository {
 
     async findPaymentsByMonthYear(month: number, year: number): Promise<PaymentDocument | null> {
         return this.paymentModel.findOne({month: month, year: year}).lean().exec();
+    }
 
-
+    async updatePayment(paymentId: string, payment: Partial<PaymentDocument>): Promise<void> {
+        await this.paymentModel.updateOne({ paymentId: paymentId }, { $set: payment });
     }
 
     
