@@ -13,6 +13,6 @@ async function bootstrap() {
   }));
   app.useGlobalFilters(new DomainErrorFilter());
   await app.listen(process.env.PORT ?? 4001);
-  console.log('App listening on port : ', process.env.PORT ?? 4000);
+  console.log('App hi listening on port : ', process.env.PORT ?? 4000);
 }
 bootstrap();

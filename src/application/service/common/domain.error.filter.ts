@@ -1,10 +1,20 @@
-import {ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException, HttpStatus,} from '@nestjs/common';
+import {
+  ArgumentsHost,
+  BadRequestException,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+  Logger
+} from '@nestjs/common';
 import {Request, Response} from 'express';
 import {DomainError, ValidationError} from './domain.error';
 
 
 @Catch()
 export class DomainErrorFilter implements ExceptionFilter {
+  private readonly logger = new Logger(DomainErrorFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
@@ -55,6 +65,12 @@ export class DomainErrorFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const body = exception.getResponse();
 
+      // Helpful when debugging unexpected 4xx/5xx coming from Nest internals
+      this.logger.warn(
+          `[${req.method}] ${req.url} - HttpException ${status}: ${JSON.stringify(body)}`,
+      );
+
+
       res.status(status).json(
         typeof body === 'string'
           ? {
@@ -74,7 +90,15 @@ export class DomainErrorFilter implements ExceptionFilter {
       return;
     }
 
+    // ✅ THIS is the missing piece: log the real error + stack
+    const anyEx = exception as any;
+    this.logger.error(
+        `[${req.method}] ${req.url} - 500 Unhandled exception`,
+        anyEx?.stack ?? JSON.stringify(anyEx),
+    );
 
+    // Optional: print the raw object too (sometimes drivers put useful fields on it)
+    // console.error('RAW exception:', exception);
 
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common';
-import {ConfigModule} from '@nestjs/config';
+import {ConfigModule, ConfigService} from '@nestjs/config';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {GetTenantController} from './adapters/in/get_tenants/get.tenants.controller';
@@ -32,10 +32,21 @@ import {CreatePaymentService} from './application/service/create_payment/create.
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/tenants'),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+          `.env.${process.env.NODE_ENV ?? 'local'}`,
+          `.env`,
+      ],
+    }),
+    MongooseModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        uri: config.get<string>('MONGODB_URI', 'mongodb://localhost:27017/tenants'),
+      }),
+      inject: [ConfigService],
+    }),
     MongooseModule.forFeature([
-      { name: Tenant.name, schema: TenantSchema },// Assuming you have a Tenant schema defined
+      { name: Tenant.name, schema: TenantSchema },
       { name: Payments.name, schema: PaymentsSchema }
     ])
   ],
