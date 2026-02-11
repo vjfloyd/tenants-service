@@ -17,9 +17,7 @@ services:
           memory: 512M
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/vjfloyd/tenants-service:latest
     container_name: tenants-api
     restart: always
     ports:
