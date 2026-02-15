@@ -35,9 +35,9 @@ import {CreatePaymentService} from './application/service/create_payment/create.
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
-          `.env.${process.env.NODE_ENV ?? 'local'}`,
+          `.env.${process.env.NODE_ENV}`,
           `.env`,
-      ],
+      ].filter(Boolean),
     }),
     MongooseModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
