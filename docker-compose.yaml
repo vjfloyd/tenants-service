@@ -18,7 +18,7 @@ services:
         limits:
           memory: 512M
 
-  api:
+  tenants-api:
     image: ghcr.io/vjfloyd/tenants-service:latest
     container_name: tenants-api
     restart: always
@@ -32,6 +32,9 @@ services:
       resources:
         limits:
           memory: 256M
-
+networks:
+  tenants-network:
+    name: tenants-network
+    external: true
 volumes:
   mongodb_data:

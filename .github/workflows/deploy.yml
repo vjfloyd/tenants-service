@@ -79,7 +79,7 @@ jobs:
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             # Pull latest image
-            docker compose pull api
+            docker compose pull tenants-api
 
             # Restart with zero downtime
             docker compose up -d --no-build
