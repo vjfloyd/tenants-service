@@ -40,9 +40,15 @@ import {CreatePaymentService} from './application/service/create_payment/create.
       ].filter(Boolean),
     }),
     MongooseModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI', 'mongodb://localhost:27017/tenants'),
-      }),
+      useFactory: (config: ConfigService) => {
+        const uri = config.get<string>('MONGODB_URI', 'mongodb://localhost:27017/tenants');
+        console.log('🔍 MONGODB_URI:', uri);
+        console.log('🔍 Environment variables loaded:');
+        console.log('   - NODE_ENV:', process.env.NODE_ENV || 'not set (using .env)');
+        console.log('   - MONGO_USER:', config.get<string>('MONGO_USER'));
+        console.log('   - PORT:', config.get<string>('PORT'));
+        return { uri };
+      },
       inject: [ConfigService],
     }),
     MongooseModule.forFeature([
