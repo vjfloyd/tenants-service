@@ -2,7 +2,7 @@ import {CalculatePaymentUseCase} from '../../ports/in/calculate_payment/calculat
 import {Injectable} from '@nestjs/common';
 import {PaymentInfo} from '../../ports/in/calculate_payment/Payment';
 import {TenantConsumption} from '../../ports/in/calculate_payment/TenantConsumption';
-import {GetPreviousPaymentPort} from '../../ports/out/calculate_payment/calculate_payment.port';
+import {GetPreviousPaymentPort} from '@/application/ports/out/get_payment/get_payment.port';
 import {TenantDebtResult} from './tenant.debt.result';
 import {PaymentDebt} from '../../../adapters/out/calculate_payment/model/payment.debt.model';
 import {CreatePaymentPort} from '../../ports/out/create_payment/create_payment.port';
