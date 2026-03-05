@@ -1,15 +1,15 @@
-import {Payment} from 'src/application/domain/model/Payment.model';
-import {GetPreviousPaymentPort} from '../../../application/ports/out/calculate_payment/calculate_payment.port';
+import {Payment} from '@/application/domain/model/Payment.model';
+import {GetPreviousPaymentPort} from '@/application/ports/out/get_payment/get_payment.port';
 import {Injectable} from '@nestjs/common';
-import {PaymentRepository} from './payment.repository';
 import {PaymentDocument} from '../common/collections/payments.schema';
-import {PaymentDebt} from './model/payment.debt.model';
+import {PaymentDebt} from '../calculate_payment/model/payment.debt.model';
+import {GetPaymentRepository} from '@/adapters/out/get_payment/get_payment.repository';
 
 
 @Injectable()
-export class CalculatePaymentAdapter implements GetPreviousPaymentPort {
+export class GetPaymentAdapter implements GetPreviousPaymentPort {
 
-    constructor(private readonly paymentRepository: PaymentRepository) {
+    constructor(private readonly paymentRepository: GetPaymentRepository) {
     }
 
 

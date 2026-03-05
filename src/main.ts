@@ -12,6 +12,14 @@ async function bootstrap() {
     transform: true,
   }));
   app.useGlobalFilters(new DomainErrorFilter());
+
+  // Enable CORS
+  app.enableCors({
+    origin: '*', // or specify allowed origins like 'http://localhost:3000'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   await app.listen(process.env.PORT ?? 4001);
   console.log('App hi listening on port : ', process.env.PORT ?? 4000);
 }
