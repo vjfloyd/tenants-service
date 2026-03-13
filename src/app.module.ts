@@ -5,6 +5,7 @@ import {GetTenantsModule} from '@/features/get-tenants/get-tenants.module';
 import {CreateTenantModule} from '@/features/create-tenant/create-tenant.module';
 import {CalculatePaymentModule} from '@/features/calculate-payment/calculate-payment.module';
 import {CreatePaymentModule} from '@/features/create-payment/create-payment.module';
+import {DeleteTenantModule} from '@/features/delete-tenant/delete-tenant.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import {CreatePaymentModule} from '@/features/create-payment/create-payment.modu
       DatabaseModule,
       GetTenantsModule,
       CreateTenantModule,
+      DeleteTenantModule,
       CalculatePaymentModule,
       CreatePaymentModule
   ],

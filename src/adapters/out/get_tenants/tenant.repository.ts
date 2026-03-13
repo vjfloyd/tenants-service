@@ -2,8 +2,8 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {TenantDocument} from '../common/collections/tenant.schema';
-import {Tenant} from '../../../application/domain/model/tenant.model';
-import {TenantInfo} from '../../../application/domain/model/TenantInfo';
+import {Tenant} from '@/application/domain/model/tenant.model';
+import {TenantInfo} from '@/application/domain/model/TenantInfo';
 import {PaymentDocument, Payments, TenantConsumption} from '../common/collections/payments.schema';
 
 @Injectable()
@@ -22,6 +22,10 @@ export class TenantRepository {
   async create(tenant: Tenant): Promise<void> {
     const createdTenant = new this.tenantModel(tenant);
      await createdTenant.save();
+  }
+
+  async deleteByCode(code: string): Promise<void> {
+    await this.tenantModel.deleteOne({code}).exec();
   }
 
   async findTenants(month: number, year: number): Promise<TenantInfo[]> {
