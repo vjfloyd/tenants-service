@@ -2,11 +2,28 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {ValidationPipe} from '@nestjs/common';
 import {DomainErrorFilter} from './application/service/common/domain.error.filter';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
+
+  app.use(
+      session({
+        secret: process.env.SESSION_SECRET || 'my-secret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+          maxAge: 3600000, // 1 hour
+        },
+      }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
@@ -14,13 +31,14 @@ async function bootstrap() {
   app.useGlobalFilters(new DomainErrorFilter());
 
   // Enable CORS
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   app.enableCors({
-    origin: '*', // or specify allowed origins like 'http://localhost:3000'
+    origin: frontendUrl,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
   await app.listen(process.env.PORT ?? 4001);
-  console.log('App hi listening on port : ', process.env.PORT ?? 4000);
+  console.log('App is listening on port: ', process.env.PORT ?? 4001);
 }
 bootstrap();

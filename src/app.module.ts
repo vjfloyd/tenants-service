@@ -6,6 +6,7 @@ import {CreateTenantModule} from '@/features/create-tenant/create-tenant.module'
 import {CalculatePaymentModule} from '@/features/calculate-payment/calculate-payment.module';
 import {CreatePaymentModule} from '@/features/create-payment/create-payment.module';
 import {DeleteTenantModule} from '@/features/delete-tenant/delete-tenant.module';
+import {AuthModule} from '@/features/auth/auth.module';
 
 
 @Module({
@@ -22,7 +23,8 @@ import {DeleteTenantModule} from '@/features/delete-tenant/delete-tenant.module'
       CreateTenantModule,
       DeleteTenantModule,
       CalculatePaymentModule,
-      CreatePaymentModule
+      CreatePaymentModule,
+      AuthModule
   ],
 })
 

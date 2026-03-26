@@ -13,6 +13,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - tenants-network
     deploy:
       resources:
         limits:
@@ -28,6 +30,8 @@ services:
       - .env
     depends_on:
       - mongodb
+    networks:
+      - tenants-network
     deploy:
       resources:
         limits:
