@@ -4,10 +4,18 @@ import {ValidationPipe} from '@nestjs/common';
 import {DomainErrorFilter} from './application/service/common/domain.error.filter';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import {collectDefaultMetrics, register} from 'prom-client';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+  });
+
+  // Prometheus monitoring
+  collectDefaultMetrics();
+  app.getHttpAdapter().get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
   });
 
   app.use(
