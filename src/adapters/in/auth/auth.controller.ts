@@ -17,7 +17,8 @@ export class AuthController {
         // Passport adds the user to req.user after successful authentication
         // Redirect to the frontend application's main page (e.g., http://localhost:3000)
         // where the user can see the list of tenants
-        console.log(' #### googleAuthRedirect => ', process.env.FRONTEND_URL);
+        const user = req.user;
+        console.log(' #### googleAuthRedirect => ', process.env.FRONTEND_URL, ' User: ', user ? (user as any).id : 'None');
         const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000/login';
         res.redirect(frontendUrl);
     }
