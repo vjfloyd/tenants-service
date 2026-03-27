@@ -1,4 +1,5 @@
 import {NestFactory} from '@nestjs/core';
+import {NestExpressApplication} from '@nestjs/platform-express';
 import {AppModule} from './app.module';
 import {ValidationPipe} from '@nestjs/common';
 import {DomainErrorFilter} from './application/service/common/domain.error.filter';
@@ -7,9 +8,11 @@ import * as passport from 'passport';
 import {collectDefaultMetrics, register} from 'prom-client';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
+
+  app.set('trust proxy', 1);
 
   // Enable CORS
   const frontendUrlString = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -18,21 +21,25 @@ async function bootstrap() {
   console.log('### ', process.env.GOOGLE_CALLBACK_URL)
   app.enableCors({
     origin: (origin, callback) => {
+      console.log(`CORS check for origin: ${origin}`);
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.warn(`CORS blocked for origin: ${origin}`);
+        console.warn(`CORS blocked for origin: ${origin}. Expected one of: ${allowedOrigins.join(', ')}`);
         callback(new Error('Not allowed by CORS'));
       }
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: 'Content-Type, Accept, Authorization, Cookie',
+    allowedHeaders: 'Content-Type, Accept, Authorization, Cookie, X-Requested-With, Origin, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Access-Control-Allow-Credentials',
+    exposedHeaders: 'Set-Cookie, Access-Control-Allow-Origin, Access-Control-Allow-Credentials',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
   // Prometheus monitoring
   collectDefaultMetrics();
-  app.getHttpAdapter().get('/metrics', async (req, res) => {
+  app.getHttpAdapter().get('/metrics', async (req: any, res: any) => {
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
   });
