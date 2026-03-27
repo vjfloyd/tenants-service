@@ -11,6 +11,25 @@ async function bootstrap() {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
 
+  // Enable CORS
+  const frontendUrlString = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const allowedOrigins = frontendUrlString.split(',').map(url => url.trim());
+  console.log('Allowed Origins set to: ', allowedOrigins);
+  console.log('### ', process.env.GOOGLE_CALLBACK_URL)
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked for origin: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization, Cookie',
+  });
+
   // Prometheus monitoring
   collectDefaultMetrics();
   app.getHttpAdapter().get('/metrics', async (req, res) => {
@@ -37,16 +56,6 @@ async function bootstrap() {
     transform: true,
   }));
   app.useGlobalFilters(new DomainErrorFilter());
-
-  // Enable CORS
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-  console.log('Frontend URL set to: ', frontendUrl);
-  console.log('### ', process.env.GOOGLE_CALLBACK_URL)
-  app.enableCors({
-    origin: frontendUrl,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
 
   await app.listen(process.env.PORT ?? 4001);
   console.log('App is listening on port: ', process.env.PORT ?? 4001);
