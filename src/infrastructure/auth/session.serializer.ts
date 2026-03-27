@@ -10,6 +10,7 @@ export class SessionSerializer extends PassportSerializer {
     }
 
     serializeUser(user: User, done: (err: Error | null, user: string) => void): any {
+        console.log('Serializing user:', user.id);
         done(null, user.id);
     }
 
@@ -18,9 +19,14 @@ export class SessionSerializer extends PassportSerializer {
         done: (err: Error | null, user: User | null) => void,
     ): Promise<any> {
         try {
+            console.log('Deserializing user:', id);
             const user = await this.userPort.findById(id);
+            if (!user) {
+                console.warn('User not found during deserialization:', id);
+            }
             done(null, user);
         } catch (err) {
+            console.error('Error during deserialization:', err);
             done(err, null);
         }
     }

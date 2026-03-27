@@ -24,14 +24,25 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         profile: any,
         done: VerifyCallback,
     ): Promise<any> {
-        const {name, emails, photos, id} = profile;
-        const user = await this.authUseCase.validateUser(
-            emails[0].value,
-            name.givenName + ' ' + name.familyName,
-            'google',
-            id,
-            photos[0].value,
-        );
-        done(null, user);
+        try {
+            const {name, emails, photos, id} = profile;
+
+            if (!emails || emails.length === 0) {
+                console.error('No emails found in Google profile');
+                return done(new Error('No emails found in Google profile'), undefined);
+            }
+
+            const user = await this.authUseCase.validateUser(
+                emails[0].value,
+                ((name?.givenName || '') + ' ' + (name?.familyName || '')).trim() || 'Google User',
+                'google',
+                id,
+                photos && photos.length > 0 ? photos[0].value : undefined,
+            );
+            done(null, user);
+        } catch (error) {
+            console.error('Error in GoogleStrategy.validate:', error);
+            done(error, undefined);
+        }
     }
 }

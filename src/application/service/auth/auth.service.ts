@@ -16,9 +16,11 @@ export class AuthService implements AuthUseCase {
         providerId: string,
         picture?: string,
     ): Promise<User> {
+        console.log(`Validating user: ${email}, provider: ${provider}, providerId: ${providerId}`);
         const user = await this.userPort.findByEmail(email);
 
         if (user) {
+            console.log(`User found: ${user.id}. Updating...`);
             // If user exists but from different provider, you might want to handle it (merge or error)
             // For now, update user info from provider
             const updatedUser = new User(
@@ -32,6 +34,7 @@ export class AuthService implements AuthUseCase {
             return this.userPort.update(updatedUser);
         }
 
+        console.log(`User not found for email: ${email}. Creating new user.`);
         // New user sign up
         const newUser = new User(
             uuidv4(),
