@@ -22,10 +22,11 @@ async function bootstrap() {
   app.enableCors({
     origin: (origin, callback) => {
       console.log(`CORS check for origin: ${origin}`);
-      if (!origin || allowedOrigins.includes(origin)) {
+      const isAllowedPrefix = origin && origin.startsWith('http://api.vksolutionsai.com');
+      if (!origin || allowedOrigins.includes(origin) || isAllowedPrefix) {
         callback(null, true);
       } else {
-        console.warn(`CORS blocked for origin: ${origin}. Expected one of: ${allowedOrigins.join(', ')}`);
+        console.warn(`CORS blocked for origin: ${origin}. Expected one of: ${allowedOrigins.join(', ')} or starting with http://api.vksolutionsai.com`);
         callback(new Error('Not allowed by CORS'));
       }
     },
