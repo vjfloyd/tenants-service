@@ -40,6 +40,8 @@ async function bootstrap() {
 
   // Enable CORS
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  console.log('Frontend URL set to: ', frontendUrl);
+  console.log('### ', process.env.GOOGLE_CALLBACK_URL)
   app.enableCors({
     origin: frontendUrl,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
